@@ -24,6 +24,8 @@ package com.otavio;
  import java.util.NoSuchElementException;
  import java.util.Scanner;
  import java.util.regex.Pattern;
+
+import com.otavio.CaminhamentoAPIs.StdIn;
  
  /**
   *  <i>Input</i>. This class provides methods for reading strings

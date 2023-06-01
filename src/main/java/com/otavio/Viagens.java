@@ -1,11 +1,16 @@
 package com.otavio;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Viagens {
 
-    private ArrayList<ArrayList<Character>> mapa;;
+    private ArrayList<ArrayList<Character>> mapa;
     private final Porto[] portos = new Porto[9];
+    private Grafo mapGraph = new Grafo();
+    private int fileiras;
+    private int colunas;
+    
 
     public void lerArquivo(String nomeArquivo){
         try{
@@ -15,6 +20,7 @@ public class Viagens {
             int y = Integer.parseInt(tamanho[0]);
             int x = Integer.parseInt(tamanho[1]);
             mapa = new ArrayList<>(y);
+            
             for(int i = 0; i < y; i++){
                 linha = arq.readLine();
                 tamanho = linha.split("");
@@ -23,20 +29,46 @@ public class Viagens {
                     mapa.get(i).add(tamanho[j].charAt(0));
                 }
             }
+            
         }catch(Exception e){
             System.err.println("Erro: " + e);
         }
         achaPortos();
+        linkarVertices();
         imprimirMapa();
     }
 
 
-    public void achaPortos(){
-        for(int i = 0; i < mapa.size(); i++){
-            for(int j = 0; j < mapa.get(i).size(); j++) {
+    private void linkarVertices() {
+        for(int i = 0; i < fileiras; i++){
+            for(int j = 0; j < colunas; j++){
+                char atual = mapa.get(i).get(j);
+                if (i > 0 && mapa.get(i-1).get(j) != '*') {
+                    mapGraph.addEdge(atual, mapa.get(i-1).get(j));
+                }
+                if (i < fileiras - 1 && mapa.get(i+1).get(j) != '*') {
+                    mapGraph.addEdge(atual, mapa.get(i+1).get(j));
+                }
+                if (j > 0 && mapa.get(i).get(j-1) != '*') {
+                    mapGraph.addEdge(atual, mapa.get(i).get(j-1));
+                }
+                if (j < colunas - 1 && mapa.get(i).get(j+1) != '*') {
+                    mapGraph.addEdge(atual, mapa.get(i).get(j+1));
+                }
+            }
+        }
+        List<Character> adjacentVertices = mapGraph.getAdjacentVertices('6');
+        System.out.println("Adjacentes de '1': " + adjacentVertices);
+    }
+
+
+    private void achaPortos(){
+        fileiras = mapa.size();
+        colunas = mapa.get(0).size();
+        for(int i = 0; i < fileiras; i++){
+            for(int j = 0; j < colunas; j++) {
                 int number_ = mapa.get(i).get(j);
-                if ((number_ >= 49 && number_ <= 57) && (mapa.get(i-1).get(j) != '*' || mapa.get(i+1).get(j) != '*'
-                || mapa.get(i).get(j-1) != '*' || mapa.get(i).get(j+1) != '*')){
+                if (number_ >= 49 && number_ <= 57){
                     int porto = Integer.parseInt(Character.toString((char) number_)) - 1;
                     portos[porto] = new Porto(mapa.get(i).get(j),j,i);
                 }
