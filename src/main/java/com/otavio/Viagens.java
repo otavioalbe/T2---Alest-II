@@ -27,13 +27,7 @@ public class Viagens {
             System.err.println("Erro: " + e);
         }
         achaPortos();
-
         imprimirMapa();
-
-
-        // System.out.println(mapa.get(14));
-        // System.out.println(mapa.get(14).get(12));
-        // System.out.println(mapa.size());
     }
 
 
@@ -44,7 +38,7 @@ public class Viagens {
                 if ((number_ >= 49 && number_ <= 57) && (mapa.get(i-1).get(j) != '*' || mapa.get(i+1).get(j) != '*'
                 || mapa.get(i).get(j-1) != '*' || mapa.get(i).get(j+1) != '*')){
                     int porto = Integer.parseInt(Character.toString((char) number_)) - 1;
-                    portos[porto] = new Porto(mapa.get(i).get(j),i,j);
+                    portos[porto] = new Porto(mapa.get(i).get(j),j,i);
                 }
             }
         }
